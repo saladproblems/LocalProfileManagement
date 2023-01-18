@@ -13,34 +13,34 @@ class ValidateCimClass : System.Management.Automation.ValidateEnumeratedArgument
     }
 }
 
-Function Get-RSUserProfile {
+Function Get-LPProfile {
  
     [CmdletBinding()]
     Param(
         [Parameter()]
         [string[]]$ComputerName = $env:COMPUTERNAME,
 
-        [parameter()]
+        [parameter(position=0)]
         [string[]]$Name,
 
         [Parameter()]
         [string[]]$ExcludeName
     )
 
-    $nameFilter = ($Name -replace '(.+)', 'name like "$1"') -join ' OR ' -replace '(.+)', '($1)'
+    $nameFilter = ($Name -replace '(.+)', 'LocalPath like "$1"') -join ' OR ' -replace '(.+)', '($1)'
     $excludeFilter = ($excludeName -replace '(.+)', 'name not like "$1"') -join ' AND ' -replace '(.+)', '($1)'
 
     $getParam = @{
         ComputerName = $ComputerName
         ClassName    = 'Win32_UserProfile'
-        Filter       = @('special = false', $nameFilter.foreach, $excludeFilter) -match '\w' -join ' AND ' -replace '\*', '%'
+        Filter       = @('special = false', $nameFilter, $excludeFilter) -match '\w' -join ' AND ' -replace '\*', '%'
     }
     
     Get-CimInstance @getParam
 
 }
 
-function Remove-RSUserProfile {
+function Remove-LPUserProfile {
     [CmdletBinding(SupportsShouldProcess, confirmimpact = 'high')]
     param(
         [parameter(ValueFromPipeline)]
