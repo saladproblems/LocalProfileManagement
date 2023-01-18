@@ -28,7 +28,7 @@ Function Get-LPProfile {
     )
 
     $nameFilter = ($Name -replace '(.+)', 'LocalPath like "$1"') -join ' OR ' -replace '(.+)', '($1)'
-    $excludeFilter = ($excludeName -replace '(.+)', 'name not like "$1"') -join ' AND ' -replace '(.+)', '($1)'
+    $excludeFilter = ($excludeName -replace '(.+)', 'LocalPath like "$1"') -join ' AND ' -replace '(.+)', 'NOT ($1)'
 
     $getParam = @{
         ComputerName = $ComputerName
